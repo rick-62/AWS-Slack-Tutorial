@@ -1,6 +1,7 @@
 import json
 
-# import requests
+import requests
+
 
 
 def lambda_handler(event, context):
@@ -25,18 +26,29 @@ def lambda_handler(event, context):
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
 
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
+    url = "https://slack.com/api/chat.postMessage"
 
-    #     raise e
+    headers = {}
+    headers["Authorization"] = "Bearer xoxb-3386604110887-3424965232336-wfOVcKL86aV8cxNjxxuPgn2L"
+    headers["Content-Type"] = "application/json"
+
+    myMessage = """
+    {"channel": "#using-slack-and-aws-eventbridge-to-automate-your-devops-tasks",
+    "text": "Hello Again"}
+    """
+
+    try:
+        resp = requests.put(url, headers=headers, json=myMessage)
+    except requests.RequestException as e:
+        # Send some context about this error to Lambda Logs
+        print(e)
+
+        raise e
 
     return {
-        "statusCode": 200,
+        "statusCode": resp.status_code,
         "body": json.dumps({
-            "message": "hello world",
+            "message": "hello rick",
             # "location": ip.text.replace("\n", "")
         }),
     }
