@@ -1,7 +1,7 @@
 import json
 
+import boto3
 import requests
-
 
 
 def lambda_handler(event, context):
@@ -26,19 +26,24 @@ def lambda_handler(event, context):
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
 
+
+
+    # Create our SSM Client.
+    aws_client = boto3.client('ssm')
+
+
     url = "https://slack.com/api/chat.postMessage"
 
     headers = {}
-    headers["Authorization"] = "Bearer xoxb-3386604110887-3424965232336-wfOVcKL86aV8cxNjxxuPgn2L"
+    headers["Authorization"] = f"{aws_client.get_parameter(Name='slack-api', WithDecryption=True)['Parameter']['Value']}"
     headers["Content-Type"] = "application/json"
 
-    myMessage = """
-    {"channel": "#using-slack-and-aws-eventbridge-to-automate-your-devops-tasks",
-    "text": "Hello Again"}
-    """
+    myMessage = {
+        "channel": "#using-slack-and-aws-eventbridge-to-automate-your-devops-tasks",
+        "text": "Hello from lambda"}
 
     try:
-        resp = requests.put(url, headers=headers, json=myMessage)
+        resp = requests.post(url, headers=headers, data=json.dumps(myMessage))
     except requests.RequestException as e:
         # Send some context about this error to Lambda Logs
         print(e)
@@ -48,7 +53,7 @@ def lambda_handler(event, context):
     return {
         "statusCode": resp.status_code,
         "body": json.dumps({
-            "message": "hello rick",
+            "message": f"hello from lambda: {resp.text}",
             # "location": ip.text.replace("\n", "")
         }),
     }

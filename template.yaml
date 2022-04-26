@@ -19,12 +19,29 @@ Resources:
       Runtime: python3.8
       Architectures:
         - x86_64
+      Policies:
+      - SSMParameterReadPolicy:
+          ParameterName:
+            slack-api
+      Layers:
+        - !Ref MyLambdaLayer
       Events:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /hello
             Method: get
+
+  MyLambdaLayer:
+      Type: AWS::Serverless::LayerVersion
+      Properties:
+          LayerName: MyLambdaLayer
+          Description: python dependencies
+          ContentUri: lambda-layer\my-lambda-layer.zip
+          CompatibleRuntimes:
+              - python3.8
+              - python3.7
+          RetentionPolicy: Retain  # can use previous versions in lambda functions
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -39,3 +56,9 @@ Outputs:
   HelloWorldFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt HelloWorldFunctionRole.Arn
+  Outputs:
+    MyLambdaLayerARN:
+        Value: !Ref MyLambdaLayer
+        Description: MyLambdaLayer ARN
+        Export:
+            Name: my-lambda-layer-arn
