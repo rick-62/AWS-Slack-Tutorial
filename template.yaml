@@ -37,7 +37,7 @@ Resources:
       Properties:
           LayerName: MyLambdaLayer
           Description: python dependencies
-          ContentUri: lambda-layer\my-lambda-layer.zip
+          ContentUri: lambda-layer/my-lambda-layer.zip
           CompatibleRuntimes:
               - python3.8
               - python3.7
