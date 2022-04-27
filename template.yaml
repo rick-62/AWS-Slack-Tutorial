@@ -60,4 +60,4 @@ Outputs:
       Value: !Ref MyLambdaLayer
       Description: MyLambdaLayer ARN
       Export:
-          Name: my-lambda-layer-arn
+          Name: !Sub "${AWS::StackName}-MyLambdaLayer"
