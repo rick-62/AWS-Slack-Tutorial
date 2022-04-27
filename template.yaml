@@ -56,9 +56,8 @@ Outputs:
   HelloWorldFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt HelloWorldFunctionRole.Arn
-  Outputs:
-    MyLambdaLayerARN:
-        Value: !Ref MyLambdaLayer
-        Description: MyLambdaLayer ARN
-        Export:
-            Name: my-lambda-layer-arn
+  MyLambdaLayerARN:
+      Value: !Ref MyLambdaLayer
+      Description: MyLambdaLayer ARN
+      Export:
+          Name: my-lambda-layer-arn
