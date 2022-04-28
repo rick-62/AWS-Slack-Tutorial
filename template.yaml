@@ -31,6 +31,14 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+        Trigger:
+          Type: EventBridgeRule 
+          Properties:
+            Pattern:
+              source:
+                - aws.cloudformation
+              detail-type:
+                - CloudFormation Stack Status Change
 
   MyLambdaLayer:
       Type: AWS::Serverless::LayerVersion
